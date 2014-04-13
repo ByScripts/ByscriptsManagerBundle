@@ -1,0 +1,14 @@
+{
+    "name": "byscripts/manager-bundle",
+    "version": "0.1.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thierry Goettelmann",
+            "email": "thierry@byscripts.info"
+        }
+    ],
+    "require": {
+
+    }
+}
