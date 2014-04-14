@@ -159,7 +159,7 @@ abstract class AbstractManager
     }
 
     /**
-     * Delete the entity from the database
+     * Activate the entity
      *
      * @param       $entity
      * @param array $options
@@ -179,33 +179,23 @@ abstract class AbstractManager
     }
 
     /**
-     * Triggered after the entity is deleted
+     * Activate the entity
      *
      * @param       $entity
      * @param array $options
+     *
+     * @throws \Exception
      */
-    protected function onDeleted($entity, array $options)
+    public function deactivate($entity, array $options = array())
     {
-        if (array_key_exists('onDeleteMessage', $options)) {
-            $this->notify($options['onDeleteMessage']);
-        } elseif ($entity instanceof Deletable) {
-            $this->notify($entity->onDeleteMessage());
+        if (!$entity instanceof Activatable) {
+            throw new \Exception(sprintf('Entity %s must implements Activatable interface'));
         }
-    }
 
-    /**
-     * Triggered after the entity is deleted
-     *
-     * @param       $entity
-     * @param array $options
-     */
-    protected function onActivated($entity, array $options)
-    {
-        if (array_key_exists('onActivateMessage', $options)) {
-            $this->notify($options['onActivateMessage']);
-        } elseif ($entity instanceof Deletable) {
-            $this->notify($entity->onDeleteMessage());
-        }
+        $entity->deactivate();
+        $this->persist($entity)->flush();
+
+        $this->onDeactivated($entity, $options);
     }
 
     /**
@@ -218,17 +208,62 @@ abstract class AbstractManager
     protected function onSaved($entity, $isNew, array $options)
     {
         if ($isNew) {
-            if (array_key_exists('onCreateMessage', $options)) {
-                $this->notify($options['onCreateMessage']);
+            if (array_key_exists('createdNotification', $options)) {
+                $this->notify($options['createdNotification']);
             } elseif ($entity instanceof Savable) {
-                $this->notify($entity->onCreateMessage());
+                $this->notify($entity->createdNotification());
             }
         } else {
-            if (array_key_exists('onUpdateMessage', $options)) {
-                $this->notify($options['onUpdateMessage']);
+            if (array_key_exists('updatedNotification', $options)) {
+                $this->notify($options['updatedNotification']);
             } elseif ($entity instanceof Savable) {
-                $this->notify($entity->onUpdateMessage());
+                $this->notify($entity->updatedNotification());
             }
+        }
+    }
+
+    /**
+     * Triggered after the entity is deleted
+     *
+     * @param       $entity
+     * @param array $options
+     */
+    protected function onDeleted($entity, array $options)
+    {
+        if (array_key_exists('deletedNotification', $options)) {
+            $this->notify($options['deletedNotification']);
+        } elseif ($entity instanceof Deletable) {
+            $this->notify($entity->deletedNotification());
+        }
+    }
+
+    /**
+     * Triggered after the entity is activated
+     *
+     * @param       $entity
+     * @param array $options
+     */
+    protected function onActivated($entity, array $options)
+    {
+        if (array_key_exists('activatedNotification', $options)) {
+            $this->notify($options['activatedNotification']);
+        } elseif ($entity instanceof Activatable) {
+            $this->notify($entity->activatedNotification());
+        }
+    }
+
+    /**
+     * Triggered after the entity is deactivated
+     *
+     * @param       $entity
+     * @param array $options
+     */
+    protected function onDeactivated($entity, array $options)
+    {
+        if (array_key_exists('deactivatedNotification', $options)) {
+            $this->notify($options['deactivatedNotification']);
+        } elseif ($entity instanceof Activatable) {
+            $this->notify($entity->deactivatedNotification());
         }
     }
 

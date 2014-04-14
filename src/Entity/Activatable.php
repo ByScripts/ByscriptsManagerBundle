@@ -20,20 +20,20 @@ interface Activatable
     function deactivate();
 
     /**
-     * Message for activated entity
+     * Default notification for activated entity
      *
-     * If message is returned as an array, it will be processed through sprintf
+     * If notification is returned as an array, it will be processed through sprintf
      *
      * @return string|array
      */
-    function onActivateMessage();
+    function activatedNotification();
 
     /**
-     * Message for deactivated entity
+     * Default notification for deactivated entity
      *
-     * If message is returned as an array, it will be processed through sprintf
+     * If notification is returned as an array, it will be processed through sprintf
      *
      * @return string|array
      */
-    function onDeactivateMessage();
+    function deactivatedNotification();
 }

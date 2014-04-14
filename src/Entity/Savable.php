@@ -6,20 +6,20 @@ namespace Byscripts\Bundle\ManagerBundle\Entity;
 interface Savable
 {
     /**
-     * Default message for created entity
+     * Default notification for created entity
      *
-     * If message is returned as an array, it will be processed through sprintf
+     * If notification is returned as an array, it will be processed through sprintf
      *
      * @return string|array
      */
-    function onCreateMessage();
+    function createdNotification();
 
     /**
-     * Default message for updated entity
+     * Default notification for updated entity
      *
-     * If message is returned as an array, it will be processed through sprintf
+     * If notification is returned as an array, it will be processed through sprintf
      *
      * @return string|array
      */
-    function onUpdateMessage();
+    function updatedNotification();
 }
