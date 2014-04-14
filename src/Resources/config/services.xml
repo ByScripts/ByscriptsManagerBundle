@@ -8,7 +8,7 @@
         <parameter key="byscripts_manager.manager.class">Byscripts\Bundle\ManagerBundle\Manager\AbstractManager</parameter>
     </parameters>
     <services>
-        <service id="byscripts_manager.manager" class="%byscripts_manager.manager.class" abstract="true">
+        <service id="byscripts_manager.manager" class="%byscripts_manager.manager.class%" abstract="true">
             <call method="setEntityManager">
                 <argument type="service" id="doctrine.orm.entity_manager"/>
             </call>
