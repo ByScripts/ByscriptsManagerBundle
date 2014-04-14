@@ -1,6 +1,7 @@
 {
     "name": "byscripts/manager-bundle",
-    "version": "0.1.0",
+    "type": "symfony-bundle",
+    "description": "A simple bundle to manage entities to lighten the controllers",
     "license": "MIT",
     "authors": [
         {
@@ -9,7 +10,11 @@
         }
     ],
     "require": {
-
+        "php": ">=5.3.0",
+        "symfony/dependency-injection": "~2.3",
+        "symfony/config": "~2.3",
+        "symfony/http-kernel": "~2.3",
+        "doctrine/orm": "~2.3"
     },
     "autoload": {
         "psr-4": {
