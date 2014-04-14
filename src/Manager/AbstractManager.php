@@ -232,9 +232,15 @@ abstract class AbstractManager
         }
     }
 
+    /**
+     * @param string|array $message
+     */
     protected function notify($message)
     {
         if (null !== $this->notifier && !empty($message)) {
+            if (is_array($message)) {
+                $message = vsprintf(array_shift($message), $message);
+            }
             $this->notifier->notify($message);
         }
     }

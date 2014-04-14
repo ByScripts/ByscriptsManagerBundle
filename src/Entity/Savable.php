@@ -8,14 +8,18 @@ interface Savable
     /**
      * Default message for created entity
      *
-     * @return string
+     * If message is returned as an array, it will be processed through sprintf
+     *
+     * @return string|array
      */
     function onCreateMessage();
 
     /**
      * Default message for updated entity
      *
-     * @return string
+     * If message is returned as an array, it will be processed through sprintf
+     *
+     * @return string|array
      */
     function onUpdateMessage();
 }

@@ -22,14 +22,18 @@ interface Activatable
     /**
      * Message for activated entity
      *
-     * @return string
+     * If message is returned as an array, it will be processed through sprintf
+     *
+     * @return string|array
      */
     function onActivateMessage();
 
     /**
      * Message for deactivated entity
      *
-     * @return string
+     * If message is returned as an array, it will be processed through sprintf
+     *
+     * @return string|array
      */
     function onDeactivateMessage();
 }
