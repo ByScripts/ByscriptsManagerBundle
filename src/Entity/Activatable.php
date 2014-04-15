@@ -8,9 +8,11 @@ interface Activatable
     /**
      * Activate the entity
      *
+     * @param array $options
+     *
      * @return void
      */
-    function activate();
+    function activate(array $options = array());
 
     /**
      * Default notification for when entity is activated

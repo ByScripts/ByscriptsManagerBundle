@@ -8,9 +8,11 @@ interface Deactivatable
     /**
      * Deactivate the entity
      *
+     * @param array $options
+     *
      * @return void
      */
-    function deactivate();
+    function deactivate(array $options = array());
 
     /**
      * Default notification for when entity is deactivated

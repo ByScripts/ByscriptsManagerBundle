@@ -8,9 +8,11 @@ interface Duplicatable
     /**
      * Duplicate the entity
      *
+     * @param array $options
+     *
      * @return object The duplicated entity
      */
-    function duplicate();
+    function duplicate(array $options = array());
 
     /**
      * Default notification for when duplicated entity is created

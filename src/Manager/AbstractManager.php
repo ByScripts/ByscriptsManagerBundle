@@ -202,7 +202,7 @@ abstract class AbstractManager
             if (!$entity instanceof Duplicatable) {
                 throw new \Exception(sprintf('Entity %s must implements Duplicatable interface'));
             }
-            $duplicated = $entity->duplicate();
+            $duplicated = $entity->duplicate($options);
             $this->persist($duplicated)->flush();
             $this->onDuplicateSuccess($entity, $options);
 
@@ -229,7 +229,7 @@ abstract class AbstractManager
             if (!$entity instanceof Activatable) {
                 throw new \Exception(sprintf('Entity %s must implements Activatable interface'));
             }
-            $entity->activate();
+            $entity->activate($options);
             $this->persist($entity)->flush();
             $this->onActivateSuccess($entity, $options);
 
@@ -258,7 +258,7 @@ abstract class AbstractManager
                 throw new \Exception(sprintf('Entity %s must implements Deactivatable interface'));
             }
 
-            $entity->deactivate();
+            $entity->deactivate($options);
             $this->persist($entity)->flush();
             $this->onDeactivateSuccess($entity, $options);
 
