@@ -462,7 +462,7 @@ abstract class AbstractManager
     protected function notifySuccess($message)
     {
         if (null !== $this->notifier) {
-            $this->notifier->notifyError($this->parseMessage($message));
+            $this->notifier->notifySuccess($this->parseMessage($message));
         }
     }
 
