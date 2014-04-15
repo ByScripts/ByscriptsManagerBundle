@@ -202,9 +202,9 @@ abstract class AbstractManager
             if (!$entity instanceof Duplicatable) {
                 throw new \Exception(sprintf('Entity %s must implements Duplicatable interface'));
             }
-            $duplicated = $entity->duplicate($options);
-            $this->persist($duplicated)->flush();
-            $this->onDuplicateSuccess($entity, $options);
+            $duplicate = $entity->duplicate($options);
+            $this->persist($duplicate)->flush();
+            $this->onDuplicateSuccess($entity, $duplicate, $options);
 
             return true;
         } catch (\Exception $exception) {
@@ -428,15 +428,16 @@ abstract class AbstractManager
     /**
      * Triggered after the entity is activated
      *
-     * @param       $entity
-     * @param array $options
+     * @param object $entity    The duplicated entity
+     * @param object $duplicate The duplicate of the entity
+     * @param array  $options
      */
-    protected function onDuplicateSuccess($entity, array $options)
+    protected function onDuplicateSuccess($entity, $duplicate, array $options)
     {
         if (array_key_exists('onDuplicateSuccessNotification', $options)) {
             $this->notifySuccess($options['onDuplicateSuccessNotification']);
         } elseif ($entity instanceof Duplicatable) {
-            $this->notifySuccess($entity->onDuplicateSuccessNotification($options));
+            $this->notifySuccess($entity->onDuplicateSuccessNotification($duplicate, $options));
         }
     }
 

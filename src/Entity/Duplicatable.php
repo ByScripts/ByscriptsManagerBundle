@@ -18,11 +18,12 @@ interface Duplicatable
      * Default notification for when duplicated entity is created
      * If notification is returned as an array, it will be processed through sprintf
      *
-     * @param array $options
+     * @param object $duplicate The duplicate of the entity
+     * @param array  $options
      *
      * @return string|array
      */
-    function onDuplicateSuccessNotification(array $options = array());
+    function onDuplicateSuccessNotification($duplicate, array $options = array());
 
     /**
      * Default notification for when error happens while creating duplicated entity
