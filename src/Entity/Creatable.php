@@ -3,23 +3,21 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
-interface Savable
+interface Creatable
 {
     /**
-     * Default notification for created entity
-     *
+     * Default notification for when entity is created
      * If notification is returned as an array, it will be processed through sprintf
      *
      * @return string|array
      */
-    function createdNotification();
+    function onCreateSuccessNotification();
 
     /**
-     * Default notification for updated entity
-     *
+     * Default notification for when error happens while creating entity
      * If notification is returned as an array, it will be processed through sprintf
      *
      * @return string|array
      */
-    function updatedNotification();
+    function onCreateErrorNotification();
 }

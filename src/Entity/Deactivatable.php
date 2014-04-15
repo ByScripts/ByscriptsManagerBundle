@@ -3,25 +3,32 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
-interface Deletable
+interface Deactivatable
 {
     /**
-     * Default notification for when entity is deleted
-     * If notification is returned as an array, it will be processed through sprintf
+     * Deactivate the entity
      *
-     * @param array $options
-     *
-     * @return string|array
+     * @return void
      */
-    function onDeleteSuccessNotification(array $options = array());
+    function deactivate();
 
     /**
-     * Default notification for when error happens while deleting entity
+     * Default notification for when entity is deactivated
      * If notification is returned as an array, it will be processed through sprintf
      *
      * @param array $options
      *
      * @return string|array
      */
-    function onDeleteErrorNotification(array $options = array());
+    function onDeactivateSuccessNotification(array $options = array());
+
+    /**
+     * Default notification for when error happens while deactivating entity
+     * If notification is returned as an array, it will be processed through sprintf
+     *
+     * @param array $options
+     *
+     * @return string|array
+     */
+    function onDeactivateErrorNotification(array $options = array());
 }

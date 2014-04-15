@@ -5,5 +5,9 @@ namespace Byscripts\Bundle\ManagerBundle\Notifier;
 
 interface NotifierInterface
 {
-    function notify($message);
+    /** Handle a success message */
+    public function notifySuccess($message);
+
+    /** Handle an error message */
+    public function notifyError($message);
 }

@@ -3,32 +3,32 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
-interface Activatable
+interface Duplicatable
 {
     /**
-     * Activate the entity
+     * Duplicate the entity
      *
-     * @return void
+     * @return object The duplicated entity
      */
-    function activate();
+    function duplicate();
 
     /**
-     * Default notification for when entity is activated
+     * Default notification for when duplicated entity is created
      * If notification is returned as an array, it will be processed through sprintf
      *
      * @param array $options
      *
      * @return string|array
      */
-    function onActivateSuccessNotification(array $options = array());
+    function onDuplicateSuccessNotification(array $options = array());
 
     /**
-     * Default notification for when error happens while activating entity
+     * Default notification for when error happens while creating duplicated entity
      * If notification is returned as an array, it will be processed through sprintf
      *
      * @param array $options
      *
      * @return string|array
      */
-    function onActivateErrorNotification(array $options = array());
+    function onDuplicateErrorNotification(array $options = array());
 }
