@@ -19,9 +19,10 @@ interface Creatable
      * Default notification for when error happens while creating entity
      * If notification is returned as an array, it will be processed through sprintf
      *
-     * @param array $options
+     * @param \Exception $exception
+     * @param array      $options
      *
      * @return string|array
      */
-    function onCreateErrorNotification(array $options = array());
+    function onCreateErrorNotification(\Exception $exception, array $options = array());
 }

@@ -155,11 +155,10 @@ abstract class AbstractManager
 
             return true;
         } catch (\Exception $exception) {
-            $options['exception'] = $exception;
             if ($isNew) {
-                $this->onCreateError($entity, $options);
+                $this->onCreateError($exception, $entity, $options);
             } else {
-                $this->onUpdateError($entity, $options);
+                $this->onUpdateError($exception, $entity, $options);
             }
 
             return false;
@@ -182,8 +181,7 @@ abstract class AbstractManager
 
             return true;
         } catch (\Exception $exception) {
-            $options['exception'] = $exception;
-            $this->onDeleteError($entity, $options);
+            $this->onDeleteError($exception, $entity, $options);
 
             return false;
         }
@@ -210,8 +208,7 @@ abstract class AbstractManager
 
             return true;
         } catch (\Exception $exception) {
-            $option['exception'] = $exception;
-            $this->onDuplicateError($entity, $options);
+            $this->onDuplicateError($exception, $entity, $options);
 
             return false;
         }
@@ -238,8 +235,7 @@ abstract class AbstractManager
 
             return true;
         } catch (\Exception $exception) {
-            $option['exception'] = $exception;
-            $this->onActivateError($entity, $options);
+            $this->onActivateError($exception, $entity, $options);
 
             return false;
         }
@@ -268,8 +264,7 @@ abstract class AbstractManager
 
             return true;
         } catch (\Exception $exception) {
-            $options['exception'] = $exception;
-            $this->onDeactivateError($entity, $options);
+            $this->onDeactivateError($exception, $entity, $options);
 
             return false;
         }
@@ -293,15 +288,16 @@ abstract class AbstractManager
     /**
      * Triggered if the entity can not be created
      *
+     * @param \Exception $exception
      * @param            $entity
      * @param array      $options
      */
-    protected function onCreateError($entity, array $options)
+    protected function onCreateError(\Exception $exception, $entity, array $options)
     {
         if (array_key_exists('onCreateErrorNotification', $options)) {
             $this->notifyError($options['onCreateErrorNotification']);
         } elseif ($entity instanceof Creatable) {
-            $this->notifyError($entity->onCreateErrorNotification($options));
+            $this->notifyError($entity->onCreateErrorNotification($exception, $options));
         }
     }
 
@@ -323,15 +319,16 @@ abstract class AbstractManager
     /**
      * Triggered if the entity can not be saved
      *
+     * @param \Exception $exception
      * @param            $entity
      * @param array      $options
      */
-    protected function onUpdateError($entity, array $options)
+    protected function onUpdateError(\Exception $exception, $entity, array $options)
     {
         if (array_key_exists('onUpdateErrorNotification', $options)) {
             $this->notifyError($options['onUpdateErrorNotification']);
         } elseif ($entity instanceof Updatable) {
-            $this->notifyError($entity->onUpdateErrorNotification($options));
+            $this->notifyError($entity->onUpdateErrorNotification($exception, $options));
         }
     }
 
@@ -353,15 +350,16 @@ abstract class AbstractManager
     /**
      * Triggered after the entity can not be deleted
      *
-     * @param       $entity
-     * @param array $options
+     * @param \Exception $exception
+     * @param            $entity
+     * @param array      $options
      */
-    protected function onDeleteError($entity, array $options)
+    protected function onDeleteError(\Exception $exception, $entity, array $options)
     {
         if (array_key_exists('onDeleteErrorNotification', $options)) {
             $this->notifyError($options['onDeleteErrorNotification']);
         } elseif ($entity instanceof Deletable) {
-            $this->notifyError($entity->onDeleteErrorNotification($options));
+            $this->notifyError($entity->onDeleteErrorNotification($exception, $options));
         }
     }
 
@@ -383,15 +381,16 @@ abstract class AbstractManager
     /**
      * Triggered if the entity cannot be activated
      *
-     * @param       $entity
-     * @param array $options
+     * @param \Exception $exception
+     * @param            $entity
+     * @param array      $options
      */
-    protected function onActivateError($entity, array $options)
+    protected function onActivateError(\Exception $exception, $entity, array $options)
     {
         if (array_key_exists('onActivateErrorNotification', $options)) {
             $this->notifyError($options['onActivateErrorNotification']);
         } elseif ($entity instanceof Activatable) {
-            $this->notifyError($entity->onActivateErrorNotification($options));
+            $this->notifyError($entity->onActivateErrorNotification($exception, $options));
         }
     }
 
@@ -413,15 +412,16 @@ abstract class AbstractManager
     /**
      * Triggered if the entity cannot be deactivated
      *
-     * @param       $entity
-     * @param array $options
+     * @param \Exception $exception
+     * @param            $entity
+     * @param array      $options
      */
-    protected function onDeactivateError($entity, array $options)
+    protected function onDeactivateError(\Exception $exception, $entity, array $options)
     {
         if (array_key_exists('onDeactivateErrorNotification', $options)) {
             $this->notifyError($options['onDeactivateErrorNotification']);
         } elseif ($entity instanceof Deactivatable) {
-            $this->notifyError($entity->onDeactivateErrorNotification($options));
+            $this->notifyError($entity->onDeactivateErrorNotification($exception, $options));
         }
     }
 
@@ -443,15 +443,16 @@ abstract class AbstractManager
     /**
      * Triggered if the entity cannot be activated
      *
-     * @param       $entity
-     * @param array $options
+     * @param \Exception $exception
+     * @param            $entity
+     * @param array      $options
      */
-    protected function onDuplicateError($entity, array $options)
+    protected function onDuplicateError(\Exception $exception, $entity, array $options)
     {
         if (array_key_exists('onDuplicateErrorNotification', $options)) {
             $this->notifyError($options['onDuplicateErrorNotification']);
         } elseif ($entity instanceof Duplicatable) {
-            $this->notifyError($entity->onDuplicateErrorNotification($options));
+            $this->notifyError($entity->onDuplicateErrorNotification($exception, $options));
         }
     }
 

@@ -26,9 +26,10 @@ interface Duplicatable
      * Default notification for when error happens while creating duplicated entity
      * If notification is returned as an array, it will be processed through sprintf
      *
-     * @param array $options
+     * @param \Exception $exception
+     * @param array      $options
      *
      * @return string|array
      */
-    function onDuplicateErrorNotification(array $options = array());
+    function onDuplicateErrorNotification(\Exception $exception, array $options = array());
 }

@@ -19,9 +19,10 @@ interface Deletable
      * Default notification for when error happens while deleting entity
      * If notification is returned as an array, it will be processed through sprintf
      *
-     * @param array $options
+     * @param \Exception $exception
+     * @param array      $options
      *
      * @return string|array
      */
-    function onDeleteErrorNotification(array $options = array());
+    function onDeleteErrorNotification(\Exception $exception, array $options = array());
 }

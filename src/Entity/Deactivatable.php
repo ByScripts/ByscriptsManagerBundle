@@ -26,9 +26,10 @@ interface Deactivatable
      * Default notification for when error happens while deactivating entity
      * If notification is returned as an array, it will be processed through sprintf
      *
-     * @param array $options
+     * @param \Exception $exception
+     * @param array      $options
      *
      * @return string|array
      */
-    function onDeactivateErrorNotification(array $options = array());
+    function onDeactivateErrorNotification(\Exception $exception, array $options = array());
 }
