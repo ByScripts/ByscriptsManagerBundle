@@ -18,27 +18,51 @@ abstract class AbstractManager
 {
     const SKIP_CREATE_SUCCESS_NOTIFICATION = 1;
     const SKIP_CREATE_ERROR_NOTIFICATION   = 2;
-    const SKIP_CREATE_NOTIFICATION         = 3;
 
     const SKIP_UPDATE_SUCCESS_NOTIFICATION = 4;
     const SKIP_UPDATE_ERROR_NOTIFICATION   = 8;
-    const SKIP_UPDATE_NOTIFICATION         = 12;
 
     const SKIP_DELETE_SUCCESS_NOTIFICATION = 16;
     const SKIP_DELETE_ERROR_NOTIFICATION   = 32;
-    const SKIP_DELETE_NOTIFICATION         = 48;
 
     const SKIP_ACTIVATE_SUCCESS_NOTIFICATION = 64;
     const SKIP_ACTIVATE_ERROR_NOTIFICATION   = 128;
-    const SKIP_ACTIVATE_NOTIFICATION         = 192;
 
     const SKIP_DUPLICATE_SUCCESS_NOTIFICATION = 256;
     const SKIP_DUPLICATE_ERROR_NOTIFICATION   = 512;
-    const SKIP_DUPLICATE_NOTIFICATION         = 768;
 
+    /** CREATE SUCCESS + CREATE ERROR */
+    const SKIP_CREATE_NOTIFICATION = 3;
+
+    /** UPDATE SUCCESS + UPDATE ERROR */
+    const SKIP_UPDATE_NOTIFICATION = 12;
+
+    /** CREATE SUCCESS + UPDATE SUCCESS */
+    const SKIP_SAVE_SUCCESS_NOTIFICATION = 5;
+
+    /** CREATE ERROR + UPDATE ERROR */
+    const SKIP_SAVE_ERROR_NOTIFICATION = 10;
+
+    /** CREATE SUCCESS + CREATE ERROR + UPDATE SUCCESS + UPDATE ERROR */
+    const SKIP_SAVE_NOTIFICATION = 15;
+
+    /** DELETE SUCCESS + DELETE ERROR */
+    const SKIP_DELETE_NOTIFICATION = 48;
+
+    /** ACTIVATE SUCCESS + ACTIVATE ERROR */
+    const SKIP_ACTIVATE_NOTIFICATION = 192;
+
+    /** DUPLICATE SUCCESS + DUPLICATE ERROR */
+    const SKIP_DUPLICATE_NOTIFICATION = 768;
+
+    /** ALL SUCCESS NOTIFICATIONS */
     const SKIP_SUCCESS_NOTIFICATION = 341;
-    const SKIP_ERROR_NOTIFICATION   = 682;
-    const SKIP_NOTIFICATION         = 1023;
+
+    /** ALL ERROR NOTIFICATIONS */
+    const SKIP_ERROR_NOTIFICATION = 682;
+
+    /** ALL NOTIFICATIONS */
+    const SKIP_NOTIFICATION = 1023;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -305,7 +329,7 @@ abstract class AbstractManager
      */
     protected function onCreateSuccess($entity, array $options, $flags)
     {
-        if($flags & self::SKIP_CREATE_SUCCESS_NOTIFICATION) {
+        if ($flags & self::SKIP_CREATE_SUCCESS_NOTIFICATION) {
             return;
         }
 
@@ -326,7 +350,7 @@ abstract class AbstractManager
      */
     protected function onCreateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if($flags & self::SKIP_CREATE_ERROR_NOTIFICATION) {
+        if ($flags & self::SKIP_CREATE_ERROR_NOTIFICATION) {
             return;
         }
 
@@ -346,7 +370,7 @@ abstract class AbstractManager
      */
     protected function onUpdateSuccess($entity, array $options, $flags)
     {
-        if($flags & self::SKIP_UPDATE_SUCCESS_NOTIFICATION) {
+        if ($flags & self::SKIP_UPDATE_SUCCESS_NOTIFICATION) {
             return;
         }
 
@@ -367,7 +391,7 @@ abstract class AbstractManager
      */
     protected function onUpdateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if($flags & self::SKIP_UPDATE_ERROR_NOTIFICATION) {
+        if ($flags & self::SKIP_UPDATE_ERROR_NOTIFICATION) {
             return;
         }
 
@@ -387,7 +411,7 @@ abstract class AbstractManager
      */
     protected function onDeleteSuccess($entity, array $options, $flags)
     {
-        if($flags & self::SKIP_DELETE_SUCCESS_NOTIFICATION) {
+        if ($flags & self::SKIP_DELETE_SUCCESS_NOTIFICATION) {
             return;
         }
 
@@ -408,7 +432,7 @@ abstract class AbstractManager
      */
     protected function onDeleteError(\Exception $exception, $entity, array $options, $flags)
     {
-        if($flags & self::SKIP_DELETE_ERROR_NOTIFICATION) {
+        if ($flags & self::SKIP_DELETE_ERROR_NOTIFICATION) {
             return;
         }
 
@@ -428,7 +452,7 @@ abstract class AbstractManager
      */
     protected function onActivateSuccess($entity, array $options, $flags)
     {
-        if($flags & self::SKIP_ACTIVATE_SUCCESS_NOTIFICATION) {
+        if ($flags & self::SKIP_ACTIVATE_SUCCESS_NOTIFICATION) {
             return;
         }
 
@@ -449,7 +473,7 @@ abstract class AbstractManager
      */
     protected function onActivateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
+        if ($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
             return;
         }
 
@@ -469,7 +493,7 @@ abstract class AbstractManager
      */
     protected function onDeactivateSuccess($entity, array $options, $flags)
     {
-        if($flags & self::SKIP_ACTIVATE_SUCCESS_NOTIFICATION) {
+        if ($flags & self::SKIP_ACTIVATE_SUCCESS_NOTIFICATION) {
             return;
         }
 
@@ -490,7 +514,7 @@ abstract class AbstractManager
      */
     protected function onDeactivateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
+        if ($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
             return;
         }
 
@@ -511,7 +535,7 @@ abstract class AbstractManager
      */
     protected function onDuplicateSuccess($entity, $duplicate, array $options, $flags)
     {
-        if($flags & self::SKIP_DUPLICATE_SUCCESS_NOTIFICATION) {
+        if ($flags & self::SKIP_DUPLICATE_SUCCESS_NOTIFICATION) {
             return;
         }
 
@@ -532,7 +556,7 @@ abstract class AbstractManager
      */
     protected function onDuplicateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if($flags & self::SKIP_DUPLICATE_ERROR_NOTIFICATION) {
+        if ($flags & self::SKIP_DUPLICATE_ERROR_NOTIFICATION) {
             return;
         }
 
@@ -549,7 +573,7 @@ abstract class AbstractManager
      */
     protected function notifySuccess($message, $flags = 0)
     {
-        if($flags & self::SKIP_SUCCESS_NOTIFICATION) {
+        if ($flags & self::SKIP_SUCCESS_NOTIFICATION) {
             return;
         }
 
@@ -564,7 +588,7 @@ abstract class AbstractManager
      */
     protected function notifyError($message, $flags = 0)
     {
-        if($flags & self::SKIP_ERROR_NOTIFICATION) {
+        if ($flags & self::SKIP_ERROR_NOTIFICATION) {
             return;
         }
 
