@@ -16,6 +16,30 @@ use Doctrine\ORM\EntityRepository;
 
 abstract class AbstractManager
 {
+    const SKIP_CREATE_SUCCESS_NOTIFICATION = 1;
+    const SKIP_CREATE_ERROR_NOTIFICATION   = 2;
+    const SKIP_CREATE_NOTIFICATION         = 3;
+
+    const SKIP_UPDATE_SUCCESS_NOTIFICATION = 4;
+    const SKIP_UPDATE_ERROR_NOTIFICATION   = 8;
+    const SKIP_UPDATE_NOTIFICATION         = 12;
+
+    const SKIP_DELETE_SUCCESS_NOTIFICATION = 16;
+    const SKIP_DELETE_ERROR_NOTIFICATION   = 32;
+    const SKIP_DELETE_NOTIFICATION         = 48;
+
+    const SKIP_ACTIVATE_SUCCESS_NOTIFICATION = 64;
+    const SKIP_ACTIVATE_ERROR_NOTIFICATION   = 128;
+    const SKIP_ACTIVATE_NOTIFICATION         = 192;
+
+    const SKIP_DUPLICATE_SUCCESS_NOTIFICATION = 256;
+    const SKIP_DUPLICATE_ERROR_NOTIFICATION   = 512;
+    const SKIP_DUPLICATE_NOTIFICATION         = 768;
+
+    const SKIP_SUCCESS_NOTIFICATION = 341;
+    const SKIP_ERROR_NOTIFICATION   = 682;
+    const SKIP_NOTIFICATION         = 1023;
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -138,27 +162,28 @@ abstract class AbstractManager
      *
      * @param object $entity
      * @param array  $options
+     * @param int    $flags
      *
      * @return bool
      */
-    public function save($entity, array $options = array())
+    public function save($entity, array $options = array(), $flags = 0)
     {
         $isNew = !boolval($entity->getId());
 
         try {
             $this->persist($entity)->flush();
             if ($isNew) {
-                $this->onCreateSuccess($entity, $options);
+                $this->onCreateSuccess($entity, $options, $flags);
             } else {
-                $this->onUpdateSuccess($entity, $options);
+                $this->onUpdateSuccess($entity, $options, $flags);
             }
 
             return true;
         } catch (\Exception $exception) {
             if ($isNew) {
-                $this->onCreateError($exception, $entity, $options);
+                $this->onCreateError($exception, $entity, $options, $flags);
             } else {
-                $this->onUpdateError($exception, $entity, $options);
+                $this->onUpdateError($exception, $entity, $options, $flags);
             }
 
             return false;
@@ -170,18 +195,19 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      *
      * @return bool
      */
-    public function delete($entity, array $options = array())
+    public function delete($entity, array $options = array(), $flags = 0)
     {
         try {
             $this->remove($entity)->flush();
-            $this->onDeleteSuccess($entity, $options);
+            $this->onDeleteSuccess($entity, $options, $flags);
 
             return true;
         } catch (\Exception $exception) {
-            $this->onDeleteError($exception, $entity, $options);
+            $this->onDeleteError($exception, $entity, $options, $flags);
 
             return false;
         }
@@ -192,11 +218,11 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      *
      * @return bool
-     * @throws \Exception
      */
-    public function duplicate($entity, array $options = array())
+    public function duplicate($entity, array $options = array(), $flags = 0)
     {
         try {
             if (!$entity instanceof Duplicatable) {
@@ -204,11 +230,11 @@ abstract class AbstractManager
             }
             $duplicate = $entity->duplicate($options);
             $this->persist($duplicate)->flush();
-            $this->onDuplicateSuccess($entity, $duplicate, $options);
+            $this->onDuplicateSuccess($entity, $duplicate, $options, $flags);
 
             return true;
         } catch (\Exception $exception) {
-            $this->onDuplicateError($exception, $entity, $options);
+            $this->onDuplicateError($exception, $entity, $options, $flags);
 
             return false;
         }
@@ -219,11 +245,11 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      *
      * @return bool
-     * @throws \Exception
      */
-    public function activate($entity, array $options = array())
+    public function activate($entity, array $options = array(), $flags = 0)
     {
         try {
             if (!$entity instanceof Activatable) {
@@ -231,11 +257,11 @@ abstract class AbstractManager
             }
             $entity->activate($options);
             $this->persist($entity)->flush();
-            $this->onActivateSuccess($entity, $options);
+            $this->onActivateSuccess($entity, $options, $flags);
 
             return true;
         } catch (\Exception $exception) {
-            $this->onActivateError($exception, $entity, $options);
+            $this->onActivateError($exception, $entity, $options, $flags);
 
             return false;
         }
@@ -246,11 +272,11 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      *
      * @return bool
-     * @throws \Exception
      */
-    public function deactivate($entity, array $options = array())
+    public function deactivate($entity, array $options = array(), $flags = 0)
     {
         try {
 
@@ -260,11 +286,11 @@ abstract class AbstractManager
 
             $entity->deactivate($options);
             $this->persist($entity)->flush();
-            $this->onDeactivateSuccess($entity, $options);
+            $this->onDeactivateSuccess($entity, $options, $flags);
 
             return true;
         } catch (\Exception $exception) {
-            $this->onDeactivateError($exception, $entity, $options);
+            $this->onDeactivateError($exception, $entity, $options, $flags);
 
             return false;
         }
@@ -275,9 +301,14 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      */
-    protected function onCreateSuccess($entity, array $options)
+    protected function onCreateSuccess($entity, array $options, $flags)
     {
+        if($flags & self::SKIP_CREATE_SUCCESS_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onCreateSuccessNotification', $options)) {
             $this->notifySuccess($options['onCreateSuccessNotification']);
         } elseif ($entity instanceof Creatable) {
@@ -291,9 +322,14 @@ abstract class AbstractManager
      * @param \Exception $exception
      * @param            $entity
      * @param array      $options
+     * @param int        $flags
      */
-    protected function onCreateError(\Exception $exception, $entity, array $options)
+    protected function onCreateError(\Exception $exception, $entity, array $options, $flags)
     {
+        if($flags & self::SKIP_CREATE_ERROR_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onCreateErrorNotification', $options)) {
             $this->notifyError($options['onCreateErrorNotification']);
         } elseif ($entity instanceof Creatable) {
@@ -306,9 +342,14 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param       $flags
      */
-    protected function onUpdateSuccess($entity, array $options)
+    protected function onUpdateSuccess($entity, array $options, $flags)
     {
+        if($flags & self::SKIP_UPDATE_SUCCESS_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onUpdateSuccessNotification', $options)) {
             $this->notifySuccess($options['onUpdateSuccessNotification']);
         } elseif ($entity instanceof Updatable) {
@@ -322,9 +363,14 @@ abstract class AbstractManager
      * @param \Exception $exception
      * @param            $entity
      * @param array      $options
+     * @param int        $flags
      */
-    protected function onUpdateError(\Exception $exception, $entity, array $options)
+    protected function onUpdateError(\Exception $exception, $entity, array $options, $flags)
     {
+        if($flags & self::SKIP_UPDATE_ERROR_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onUpdateErrorNotification', $options)) {
             $this->notifyError($options['onUpdateErrorNotification']);
         } elseif ($entity instanceof Updatable) {
@@ -337,9 +383,14 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      */
-    protected function onDeleteSuccess($entity, array $options)
+    protected function onDeleteSuccess($entity, array $options, $flags)
     {
+        if($flags & self::SKIP_DELETE_SUCCESS_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onDeleteSuccessNotification', $options)) {
             $this->notifySuccess($options['onDeleteSuccessNotification']);
         } elseif ($entity instanceof Deletable) {
@@ -353,9 +404,14 @@ abstract class AbstractManager
      * @param \Exception $exception
      * @param            $entity
      * @param array      $options
+     * @param int        $flags
      */
-    protected function onDeleteError(\Exception $exception, $entity, array $options)
+    protected function onDeleteError(\Exception $exception, $entity, array $options, $flags)
     {
+        if($flags & self::SKIP_DELETE_ERROR_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onDeleteErrorNotification', $options)) {
             $this->notifyError($options['onDeleteErrorNotification']);
         } elseif ($entity instanceof Deletable) {
@@ -368,9 +424,14 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      */
-    protected function onActivateSuccess($entity, array $options)
+    protected function onActivateSuccess($entity, array $options, $flags)
     {
+        if($flags & self::SKIP_ACTIVATE_SUCCESS_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onActivateSuccessNotification', $options)) {
             $this->notifySuccess($options['onActivateSuccessNotification']);
         } elseif ($entity instanceof Activatable) {
@@ -384,9 +445,14 @@ abstract class AbstractManager
      * @param \Exception $exception
      * @param            $entity
      * @param array      $options
+     * @param int        $flags
      */
-    protected function onActivateError(\Exception $exception, $entity, array $options)
+    protected function onActivateError(\Exception $exception, $entity, array $options, $flags)
     {
+        if($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onActivateErrorNotification', $options)) {
             $this->notifyError($options['onActivateErrorNotification']);
         } elseif ($entity instanceof Activatable) {
@@ -399,9 +465,14 @@ abstract class AbstractManager
      *
      * @param       $entity
      * @param array $options
+     * @param int   $flags
      */
-    protected function onDeactivateSuccess($entity, array $options)
+    protected function onDeactivateSuccess($entity, array $options, $flags)
     {
+        if($flags & self::SKIP_ACTIVATE_SUCCESS_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onDeactivateSuccessNotification', $options)) {
             $this->notifySuccess($options['onDeactivateSuccessNotification']);
         } elseif ($entity instanceof Deactivatable) {
@@ -415,9 +486,14 @@ abstract class AbstractManager
      * @param \Exception $exception
      * @param            $entity
      * @param array      $options
+     * @param int        $flags
      */
-    protected function onDeactivateError(\Exception $exception, $entity, array $options)
+    protected function onDeactivateError(\Exception $exception, $entity, array $options, $flags)
     {
+        if($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onDeactivateErrorNotification', $options)) {
             $this->notifyError($options['onDeactivateErrorNotification']);
         } elseif ($entity instanceof Deactivatable) {
@@ -431,9 +507,14 @@ abstract class AbstractManager
      * @param object $entity    The duplicated entity
      * @param object $duplicate The duplicate of the entity
      * @param array  $options
+     * @param int    $flags
      */
-    protected function onDuplicateSuccess($entity, $duplicate, array $options)
+    protected function onDuplicateSuccess($entity, $duplicate, array $options, $flags)
     {
+        if($flags & self::SKIP_DUPLICATE_SUCCESS_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onDuplicateSuccessNotification', $options)) {
             $this->notifySuccess($options['onDuplicateSuccessNotification']);
         } elseif ($entity instanceof Duplicatable) {
@@ -447,9 +528,14 @@ abstract class AbstractManager
      * @param \Exception $exception
      * @param            $entity
      * @param array      $options
+     * @param int        $flags
      */
-    protected function onDuplicateError(\Exception $exception, $entity, array $options)
+    protected function onDuplicateError(\Exception $exception, $entity, array $options, $flags)
     {
+        if($flags & self::SKIP_DUPLICATE_ERROR_NOTIFICATION) {
+            return;
+        }
+
         if (array_key_exists('onDuplicateErrorNotification', $options)) {
             $this->notifyError($options['onDuplicateErrorNotification']);
         } elseif ($entity instanceof Duplicatable) {
@@ -459,9 +545,14 @@ abstract class AbstractManager
 
     /**
      * @param string|array $message
+     * @param int          $flags
      */
-    protected function notifySuccess($message)
+    protected function notifySuccess($message, $flags = 0)
     {
+        if($flags & self::SKIP_SUCCESS_NOTIFICATION) {
+            return;
+        }
+
         if (null !== $this->notifier) {
             $this->notifier->notifySuccess($this->parseMessage($message));
         }
@@ -469,9 +560,14 @@ abstract class AbstractManager
 
     /**
      * @param string|array $message
+     * @param int          $flags
      */
-    protected function notifyError($message)
+    protected function notifyError($message, $flags = 0)
     {
+        if($flags & self::SKIP_ERROR_NOTIFICATION) {
+            return;
+        }
+
         if (null !== $this->notifier) {
             $this->notifier->notifyError($this->parseMessage($message));
         }
