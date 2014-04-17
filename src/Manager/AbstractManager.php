@@ -347,6 +347,8 @@ abstract class AbstractManager
      * @param            $entity
      * @param array      $options
      * @param int        $flags
+     *
+     * @throws \Exception
      */
     protected function onCreateError(\Exception $exception, $entity, array $options, $flags)
     {
@@ -358,6 +360,8 @@ abstract class AbstractManager
             $this->notifyError($options['onCreateErrorNotification']);
         } elseif ($entity instanceof Creatable) {
             $this->notifyError($entity->onCreateErrorNotification($exception, $options));
+        } else {
+            throw $exception;
         }
     }
 
@@ -388,6 +392,8 @@ abstract class AbstractManager
      * @param            $entity
      * @param array      $options
      * @param int        $flags
+     *
+     * @throws \Exception
      */
     protected function onUpdateError(\Exception $exception, $entity, array $options, $flags)
     {
@@ -399,6 +405,8 @@ abstract class AbstractManager
             $this->notifyError($options['onUpdateErrorNotification']);
         } elseif ($entity instanceof Updatable) {
             $this->notifyError($entity->onUpdateErrorNotification($exception, $options));
+        } else {
+            throw $exception;
         }
     }
 
@@ -429,6 +437,8 @@ abstract class AbstractManager
      * @param            $entity
      * @param array      $options
      * @param int        $flags
+     *
+     * @throws \Exception
      */
     protected function onDeleteError(\Exception $exception, $entity, array $options, $flags)
     {
@@ -440,6 +450,8 @@ abstract class AbstractManager
             $this->notifyError($options['onDeleteErrorNotification']);
         } elseif ($entity instanceof Deletable) {
             $this->notifyError($entity->onDeleteErrorNotification($exception, $options));
+        } else {
+            throw $exception;
         }
     }
 
@@ -470,6 +482,8 @@ abstract class AbstractManager
      * @param            $entity
      * @param array      $options
      * @param int        $flags
+     *
+     * @throws \Exception
      */
     protected function onActivateError(\Exception $exception, $entity, array $options, $flags)
     {
@@ -481,6 +495,8 @@ abstract class AbstractManager
             $this->notifyError($options['onActivateErrorNotification']);
         } elseif ($entity instanceof Activatable) {
             $this->notifyError($entity->onActivateErrorNotification($exception, $options));
+        } else {
+            throw $exception;
         }
     }
 
@@ -511,6 +527,8 @@ abstract class AbstractManager
      * @param            $entity
      * @param array      $options
      * @param int        $flags
+     *
+     * @throws \Exception
      */
     protected function onDeactivateError(\Exception $exception, $entity, array $options, $flags)
     {
@@ -522,6 +540,8 @@ abstract class AbstractManager
             $this->notifyError($options['onDeactivateErrorNotification']);
         } elseif ($entity instanceof Deactivatable) {
             $this->notifyError($entity->onDeactivateErrorNotification($exception, $options));
+        } else {
+            throw $exception;
         }
     }
 
@@ -553,6 +573,8 @@ abstract class AbstractManager
      * @param            $entity
      * @param array      $options
      * @param int        $flags
+     *
+     * @throws \Exception
      */
     protected function onDuplicateError(\Exception $exception, $entity, array $options, $flags)
     {
@@ -564,6 +586,8 @@ abstract class AbstractManager
             $this->notifyError($options['onDuplicateErrorNotification']);
         } elseif ($entity instanceof Duplicatable) {
             $this->notifyError($entity->onDuplicateErrorNotification($exception, $options));
+        } else {
+            throw $exception;
         }
     }
 
