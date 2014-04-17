@@ -3,26 +3,35 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
+use Byscripts\Bundle\ManagerBundle\Notifier\Notification;
+
 interface Creatable
 {
     /**
      * Default notification for when entity is created
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param array $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onCreateSuccessNotification(array $options = array());
+    function onCreateSuccessNotification(Notification $notification, array $options = array());
 
     /**
      * Default notification for when error happens while creating entity
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param \Exception $exception
-     * @param array      $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onCreateErrorNotification(\Exception $exception, array $options = array());
+    function onCreateErrorNotification(Notification $notification, array $options = array());
 }

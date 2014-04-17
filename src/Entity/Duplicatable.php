@@ -3,6 +3,8 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
+use Byscripts\Bundle\ManagerBundle\Notifier\Notification;
+
 interface Duplicatable
 {
     /**
@@ -16,23 +18,30 @@ interface Duplicatable
 
     /**
      * Default notification for when duplicated entity is created
-     * If notification is returned as an array, it will be processed through sprintf
-     *
+
+
+*
+*@param Notification $notification
      * @param object $duplicate The duplicate of the entity
      * @param array  $options
-     *
-     * @return string|array
+
+
+*
+*@return Notification
      */
-    function onDuplicateSuccessNotification($duplicate, array $options = array());
+    function onDuplicateSuccessNotification(Notification $notification, $duplicate, array $options = array());
 
     /**
      * Default notification for when error happens while creating duplicated entity
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param \Exception $exception
-     * @param array      $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onDuplicateErrorNotification(\Exception $exception, array $options = array());
+    function onDuplicateErrorNotification(Notification $notification, array $options = array());
 }

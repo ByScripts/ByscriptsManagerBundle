@@ -3,6 +3,8 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
+use Byscripts\Bundle\ManagerBundle\Notifier\Notification;
+
 interface Deactivatable
 {
     /**
@@ -16,22 +18,29 @@ interface Deactivatable
 
     /**
      * Default notification for when entity is deactivated
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param array $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onDeactivateSuccessNotification(array $options = array());
+    function onDeactivateSuccessNotification(Notification $notification, array $options = array());
 
     /**
      * Default notification for when error happens while deactivating entity
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param \Exception $exception
-     * @param array      $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onDeactivateErrorNotification(\Exception $exception, array $options = array());
+    function onDeactivateErrorNotification(Notification $notification, array $options = array());
 }

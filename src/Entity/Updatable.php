@@ -3,26 +3,35 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
+use Byscripts\Bundle\ManagerBundle\Notifier\Notification;
+
 interface Updatable
 {
     /**
      * Default notification for when entity is updated
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param array $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onUpdateSuccessNotification(array $options = array());
+    function onUpdateSuccessNotification(Notification $notification, array $options = array());
 
     /**
      * Default notification for when error happens while updating entity
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param \Exception $exception
-     * @param array      $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onUpdateErrorNotification(\Exception $exception, array $options = array());
+    function onUpdateErrorNotification(Notification $notification, array $options = array());
 }

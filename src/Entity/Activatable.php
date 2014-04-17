@@ -3,6 +3,8 @@
 
 namespace Byscripts\Bundle\ManagerBundle\Entity;
 
+use Byscripts\Bundle\ManagerBundle\Notifier\Notification;
+
 interface Activatable
 {
     /**
@@ -16,22 +18,29 @@ interface Activatable
 
     /**
      * Default notification for when entity is activated
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param array $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onActivateSuccessNotification(array $options = array());
+    function onActivateSuccessNotification(Notification $notification, array $options = array());
 
     /**
      * Default notification for when error happens while activating entity
-     * If notification is returned as an array, it will be processed through sprintf
-     *
-     * @param \Exception $exception
-     * @param array      $options
-     *
-     * @return string|array
+
+
+*
+*@param Notification $notification
+     * @param array               $options
+
+
+*
+*@return Notification
      */
-    function onActivateErrorNotification(\Exception $exception, array $options = array());
+    function onActivateErrorNotification(Notification $notification, array $options = array());
 }
