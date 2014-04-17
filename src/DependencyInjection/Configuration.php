@@ -20,6 +20,30 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('byscripts_manager');
 
+        $rootNode
+            ->children()
+            ->arrayNode('exceptions')
+            ->treatNullLike(['\Exception'])
+            ->prototype('scalar')
+            ->beforeNormalization()
+            ->always(function($value){
+
+                    if (!class_exists($value)) {
+                        throw new \Exception('Class not found:' . $value);
+                    }
+
+                    $reflection = new \ReflectionClass($value);
+                    $instance = $reflection->newInstance();
+
+                    if (!$instance instanceof \Exception) {
+                        throw new \Exception('Class ' . $value . ' must extends \Exception');
+                    }
+
+                    return $value;
+                })
+        ;
+
+
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.

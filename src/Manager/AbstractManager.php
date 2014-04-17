@@ -74,6 +74,8 @@ abstract class AbstractManager
      */
     protected $notifier;
 
+    protected $exceptions = array();
+
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -82,6 +84,11 @@ abstract class AbstractManager
     public function setNotifier(NotifierInterface $notifier)
     {
         $this->notifier = $notifier;
+    }
+
+    public function setExceptions(array $exceptions)
+    {
+        $this->exceptions = $exceptions;
     }
 
     /**
@@ -320,6 +327,17 @@ abstract class AbstractManager
         }
     }
 
+    private function isExceptionSupported(\Exception $exception)
+    {
+        foreach ($this->exceptions as $supportedException) {
+            if ($exception instanceof $supportedException) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Triggered after the entity is created
      *
@@ -352,7 +370,7 @@ abstract class AbstractManager
      */
     protected function onCreateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if ($flags & self::SKIP_CREATE_ERROR_NOTIFICATION) {
+        if (!$this->isExceptionSupported($exception) || ($flags & self::SKIP_CREATE_ERROR_NOTIFICATION)) {
             return;
         }
 
@@ -397,7 +415,7 @@ abstract class AbstractManager
      */
     protected function onUpdateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if ($flags & self::SKIP_UPDATE_ERROR_NOTIFICATION) {
+        if (!$this->isExceptionSupported($exception) || ($flags & self::SKIP_UPDATE_ERROR_NOTIFICATION)) {
             return;
         }
 
@@ -442,7 +460,7 @@ abstract class AbstractManager
      */
     protected function onDeleteError(\Exception $exception, $entity, array $options, $flags)
     {
-        if ($flags & self::SKIP_DELETE_ERROR_NOTIFICATION) {
+        if (!$this->isExceptionSupported($exception) || ($flags & self::SKIP_DELETE_ERROR_NOTIFICATION)) {
             return;
         }
 
@@ -487,7 +505,7 @@ abstract class AbstractManager
      */
     protected function onActivateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if ($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
+        if (!$this->isExceptionSupported($exception) || ($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION)) {
             return;
         }
 
@@ -532,7 +550,7 @@ abstract class AbstractManager
      */
     protected function onDeactivateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if ($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION) {
+        if (!$this->isExceptionSupported($exception) || ($flags & self::SKIP_ACTIVATE_ERROR_NOTIFICATION)) {
             return;
         }
 
@@ -578,7 +596,7 @@ abstract class AbstractManager
      */
     protected function onDuplicateError(\Exception $exception, $entity, array $options, $flags)
     {
-        if ($flags & self::SKIP_DUPLICATE_ERROR_NOTIFICATION) {
+        if (!$this->isExceptionSupported($exception) || ($flags & self::SKIP_DUPLICATE_ERROR_NOTIFICATION)) {
             return;
         }
 

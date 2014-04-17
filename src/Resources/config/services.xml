@@ -6,6 +6,9 @@
 
     <services>
         <service id="byscripts_manager.manager" abstract="true">
+            <call method="setExceptions">
+                <argument>%byscripts_manager.exceptions%</argument>
+            </call>
             <call method="setEntityManager">
                 <argument type="service" id="doctrine.orm.entity_manager"/>
             </call>
