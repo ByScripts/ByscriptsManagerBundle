@@ -199,7 +199,7 @@ abstract class AbstractManager
      */
     public function save($entity, array $options = array(), $flags = 0)
     {
-        $isNew = !boolval($entity->getId());
+        $isNew = !(bool)$entity->getId();
 
         try {
             $this->persist($entity)->flush();
