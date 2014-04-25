@@ -17,7 +17,7 @@ abstract class AbstractManager
 
     protected $exceptions = array();
 
-    public function __construct(EntityManager $entityManager)
+    public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
