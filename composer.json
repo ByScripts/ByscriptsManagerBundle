@@ -1,7 +1,7 @@
 {
     "name": "byscripts/manager-bundle",
     "type": "symfony-bundle",
-    "description": "A simple bundle to manage entities to lighten the controllers",
+    "description": "Deprecated. See byscripts/object-manager-bundle",
     "license": "MIT",
     "authors": [
         {
